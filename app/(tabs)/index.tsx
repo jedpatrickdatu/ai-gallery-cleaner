@@ -5,12 +5,13 @@ import { useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function HomeScreen() {
-  const [image, setImage] = useState<string | null>(null);
+  const [images, setImages] = useState<string[]>([]);
 
-  const pickImage = async () => {
+  const pickImages = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: 'images',
       allowsEditing: false,
+      allowsMultipleSelection: true,
       // aspect: [4, 3],
       // quality: 1,
     });
@@ -18,7 +19,7 @@ export default function HomeScreen() {
     console.log(result);
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setImages([result.assets[0].uri]);
     }
   };
 
@@ -27,13 +28,13 @@ export default function HomeScreen() {
       <Stack.Screen options={{title: 'Image Picker'}} />
       <View style={styles.container}>
         <Text style={styles.title}>Item Image</Text>
-        <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
-          {image ? (
-            <Image source={{ uri: image}} style={styles.previewImage} />
+        <TouchableOpacity style={styles.imagePicker} onPress={pickImages}>
+          {images.length > 0 ? (
+            <Image source={{ uri: images[0]}} style={styles.previewImage} />
           ) : (
             <View style={styles.placeholderContainer}>
               <Ionicons name="image-outline" size={40} color={'#39E46'} />
-              <Text style={styles.placeholderText}>Select an image</Text>
+              <Text style={styles.placeholderText}>Select images</Text>
             </View>
           )}
 
