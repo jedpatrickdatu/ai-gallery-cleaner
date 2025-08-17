@@ -19,7 +19,7 @@ export default function HomeScreen() {
     console.log(result);
 
     if (!result.canceled) {
-      setImages([result.assets[0].uri]);
+      setImages(result.assets.map(asset => asset.uri));
     }
   };
 
@@ -28,16 +28,20 @@ export default function HomeScreen() {
       <Stack.Screen options={{title: 'Image Picker'}} />
       <View style={styles.container}>
         <Text style={styles.title}>Item Image</Text>
+        <Text style={styles.title}>Selected Images: {images.length}</Text>
         <TouchableOpacity style={styles.imagePicker} onPress={pickImages}>
           {images.length > 0 ? (
-            <Image source={{ uri: images[0]}} style={styles.previewImage} />
+            <View>
+              {images.map((img) =>
+                <Image key={img} source={{ uri: img }} style={styles.previewImage} />
+              )}
+            </View>
           ) : (
             <View style={styles.placeholderContainer}>
               <Ionicons name="image-outline" size={40} color={'#39E46'} />
               <Text style={styles.placeholderText}>Select images</Text>
             </View>
           )}
-
         </TouchableOpacity>
       </View>
     </>
